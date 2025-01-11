@@ -1,0 +1,55 @@
+﻿@using MauiApp1.Shared.Model
+
+<style>
+
+    .swiper-slide {
+        position: relative;
+        border-radius: 10px;
+        width: 275px;
+    }
+
+        .swiper-slide span {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #fff;
+            padding: 7px, 18px;
+            margin: 10px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: inset 2.01px -2.01px 20px rgba(214, 214, 214, 0.17), inset -3.01px 3.01px 3.01px rgba(255, 255, 255, 0.39);
+            backdrop-filter: blur(74px);
+        }
+
+        .swiper-slide h2 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            color: #fff;
+            font-weight: 400;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            margin: 0 0 20px 20px;
+        }
+
+</style>
+
+
+<div class="swiper-slide" style="background: url(@Monkey.Image) no-repeat 50% 50% / cover;">
+    <span> @Monkey.Population </span>
+    <div>
+        <h2>@Monkey.Name</h2>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Monkey Monkey { get; set; }
+    [Parameter, EditorRequired]
+    public int Index { get; set; }
+
+}

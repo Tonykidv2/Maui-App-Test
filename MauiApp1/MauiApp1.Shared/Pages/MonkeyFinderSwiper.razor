@@ -1,0 +1,101 @@
+﻿@page "/monkeyfinderswiper"
+
+@using MauiApp1.Shared.Model
+@using MauiApp1.Shared.Services
+@using MauiApp1.Shared.Component
+@implements IAsyncDisposable
+
+<h3>MonkeyFinderSwiper</h3>
+<div class="body-swiper">
+    <div class="content-swiper">
+        <div class="swiper mySwiper">
+            <!-- Additional required wrapper -->
+            @if (Monkeys.Count > 0)
+            {
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    @foreach (var monkey in Monkeys)
+                    {
+                        <MonkeySwiperSlide @key="@monkey.ID" Monkey="@monkey" Index="@getMonkeyIndex(monkey)" />
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">
+                        <div>
+                            <h2>@(Loading ? "Loading..." : "Empty")</h2>
+                        </div>
+                    </div>
+                </div>
+            }
+            @* <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            <!-- If we need scrollbar -->
+            <div class="swiper-scrollbar"></div> *@
+
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    private IMonkeyService MonkeyService { get; set; } = null!;
+
+    [Inject]
+    private IJSRuntime jSRuntime { get; set; } = null!;
+
+
+    private IJSObjectReference? swiperMod = null;
+    private List<Monkey> Monkeys = new();
+    private bool Loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Loading = true;
+        Monkeys = await MonkeyService.GetMonkeys();
+        Loading = false;
+        //await Task.Delay(500);
+
+        await base.OnInitializedAsync();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            //'./_content/{PACKAGE ID}/{SCRIPT PATH AND FILE NAME (.js)}' is needed for blazor class libraries only
+            swiperMod = await jSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/MauiApp1.Shared/Pages/MonkeyFinderSwiper.razor.js");
+
+            await swiperMod.InvokeVoidAsync("initSwiper", null);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable]
+    public static void SlideChange(int slideIndex)
+    {
+
+    }
+
+    private int getMonkeyIndex(Monkey monkey){
+        return Monkeys.IndexOf(monkey) + 1;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Monkeys.Clear();
+        if (swiperMod != null)
+        {
+            await swiperMod.InvokeVoidAsync("destorySwiper", null);
+            await swiperMod.DisposeAsync();
+        }
+    }
+}

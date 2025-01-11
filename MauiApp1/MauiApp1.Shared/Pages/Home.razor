@@ -1,0 +1,16 @@
+﻿@page "/"
+@using MauiApp1.Shared.Model
+@using MauiApp1.Shared.Services
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+
+@code {
+    [Inject]
+    private IFormFactor FormFactor { get; set; } = null!;
+
+    private string factor => FormFactor.GetFormFactor();
+    private string platform => FormFactor.GetPlatform();
+}
