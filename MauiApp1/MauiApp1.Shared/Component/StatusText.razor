@@ -1,0 +1,30 @@
+﻿<style>
+    .status-Text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem;
+        color: black;
+    }
+</style>
+
+<div class="status-text">
+    @if(IsWinner) {
+        <p>Winner: @CurrentPlayer</p>
+    } else if(IsTie) {
+        <p>Tie</p>
+    }
+    else {
+        <p>Next Player: @CurrentPlayer</p>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public bool IsWinner { get; set; } = false;
+    [Parameter, EditorRequired]
+    public bool IsTie { get; set; } = false;
+    [Parameter, EditorRequired]
+    public string CurrentPlayer { get; set; } = "";
+
+}

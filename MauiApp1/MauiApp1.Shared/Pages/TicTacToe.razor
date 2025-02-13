@@ -1,0 +1,94 @@
+﻿@page "/tictactoe"
+
+@using MauiApp1.Shared.Component
+
+<div class="content">
+    <div class="grid">
+        @foreach (var index in Enumerable.Range(0, 9))
+        {
+            <div class="grid-item" @key="@index">
+                <button @onclick="@(() => OnSpaceClick(index))"
+                        class="@(board[index] == "" ? "square" :
+                        board[index] == "X" ? "square button-X" : "square button-O")">
+                    @board[index]
+                </button>
+            </div>
+        }
+    </div>
+
+    <StatusText CurrentPlayer="@currentPlayer" IsTie="@tieGame" IsWinner="@winner" />
+
+    <button class="reset-button"
+            @onclick="@(() => onResetClick())">
+        Reset
+    </button>
+</div>
+
+
+
+@code {
+    List<string> board = null!;
+    private string currentPlayer = "X";
+    private bool winner = false;
+    private bool tieGame = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        board = new List<string>() { "", "", "", "", "", "", "", "", "" };
+    }
+
+    private void OnSpaceClick(int index){
+        //Checking if game is done
+        if (tieGame == true || winner == true)
+        {
+            return;
+        }
+
+        //Checking to see if position has already been taken
+        if (board[index] == "X" || board[index] == "O")
+        {
+            return;
+        }
+
+        board[index] = currentPlayer;
+
+        winner = checkForWinner(currentPlayer);
+        tieGame = checkTieGame();
+
+        if(winner || tieGame){
+            return;
+        }
+
+        currentPlayer = currentPlayer == "X" ? "O" : "X";
+    }
+
+    public bool checkForWinner(string currPlayer)
+    {
+        int[][] winningCombinations = new int[][]
+        {
+            new int[] {0, 1, 2}, // Row 1
+            new int[] {3, 4, 5}, // Row 2
+            new int[] {6, 7, 8}, // Row 3
+            new int[] {0, 3, 6}, // Column 1
+            new int[] {1, 4, 7}, // Column 2
+            new int[] {2, 5, 8}, // Column 3
+            new int[] {0, 4, 8}, // Diagonal 1
+            new int[] {2, 4, 6}  // Diagonal 2
+        };
+
+        return winningCombinations.Any(Combinations =>
+            Combinations.All(index => board[index] == currPlayer));
+    }
+
+    private bool checkTieGame() {
+        return board.All(str => !string.IsNullOrEmpty(str));
+    }
+
+    private void onResetClick() {
+        currentPlayer = "X";
+        winner = false;
+        tieGame = false;
+        board = new List<string>() { "", "", "", "", "", "", "", "", "" };
+    }
+}

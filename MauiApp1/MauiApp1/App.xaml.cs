@@ -9,7 +9,7 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new MainPage()) { Title = "MauiApp1" };
+            return new Window(new MainPage()) { Title = "MauiApp1", Width = 1280, Height = 720 };
         }
     }
 }
