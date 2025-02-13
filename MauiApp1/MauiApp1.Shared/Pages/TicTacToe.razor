@@ -18,7 +18,7 @@
 
     <StatusText CurrentPlayer="@currentPlayer" IsTie="@tieGame" IsWinner="@winner" />
 
-    <button class="reset-button"
+    <button type="button" class="btn btn-primary reset-button"
             @onclick="@(() => onResetClick())">
         Reset
     </button>

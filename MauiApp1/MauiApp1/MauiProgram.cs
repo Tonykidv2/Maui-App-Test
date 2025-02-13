@@ -21,7 +21,7 @@ namespace MauiApp1
             builder.Services.AddSingleton<IMonkeyService, MonkeyService>();
 
             builder.Services.AddMauiBlazorWebView();
-
+            builder.Services.AddBlazorBootstrap();
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
