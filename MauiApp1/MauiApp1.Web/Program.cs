@@ -3,7 +3,6 @@ using MauiApp1.Web.Components;
 using MauiApp1.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
